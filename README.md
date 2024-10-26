@@ -17,6 +17,7 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
   - [API to Fetch Item](#api-to-fetch-item)
   - [Illustration](#illustration)
   - [How to Build the App](#how-to-build-the-app)
+  - [Related Projects](#related-projects)
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Features
@@ -37,3 +38,6 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
 - Open `MyHackerNewsAndroid` project in Android Studio.
 - Connect an Android device or start an emulator.
 - Click the **Run** button to build and launch the app.
+
+## Related Projects
+- MyHackerNews for iOS - https://github.com/binghuan/MyHackerNews
