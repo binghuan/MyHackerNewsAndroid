@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bh.myhackernews_android.data.model.Story
+import com.bh.myhackernews_android.presentation.theme.MyHackerNewsAndroidTheme
 
 @Composable
 fun StoryItem(story: Story) {
@@ -31,5 +33,24 @@ fun StoryItem(story: Story) {
             text = "By ${story.by} • Score: ${story.score}",
             style = MaterialTheme.typography.bodySmall
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewStoryItem() {
+    val dummyStory = Story(
+        id = 1,
+        by = "PreviewUser",
+        descendants = 10,
+        score = 100,
+        time = 1638501294,
+        title = "Sample Story for Preview",
+        type = "story",
+        url = "https://example.com"
+    )
+
+    MyHackerNewsAndroidTheme {
+        StoryItem(story = dummyStory)
     }
 }
