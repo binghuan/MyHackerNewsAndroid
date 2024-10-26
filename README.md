@@ -19,6 +19,8 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
   - [How to Build the App](#how-to-build-the-app)
   - [Related Projects](#related-projects)
   - [Comparison Between iOS SwiftUI and Android Compose](#comparison-between-ios-swiftui-and-android-compose)
+    - [iOS SwiftUI](#ios-swiftui)
+    - [Android Compose](#android-compose)
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Features
@@ -47,3 +49,9 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
 In SwiftUI, you can navigate seamlessly between code and preview: clicking a component in the preview layout takes you directly to the source code, and clicking on a code block highlights the component in the preview. This two-way navigation enhances the development experience.
 
 In Android Compose, however, navigation is one-way—you can only highlight the code block by clicking on the component in the preview.
+
+### iOS SwiftUI
+![](./README/iOS_SwiftUI.gif)
+
+### Android Compose
+![](./README/Android_Compose.gif)
