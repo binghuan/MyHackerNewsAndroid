@@ -25,13 +25,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-// Mock ViewModel for Preview
-class PreviewNewsViewModel : NewsViewModel() {
+// Mock ViewModel for Preview (No inheritance from NewsViewModel)
+class PreviewNewsViewModel {
 
     // Dummy Data
-    fun getDummyStories(): List<Story> {
-        return listOf(
+    private val _stories = MutableStateFlow(
+        listOf(
             Story(
                 id = 1,
                 by = "User1",
@@ -52,17 +51,23 @@ class PreviewNewsViewModel : NewsViewModel() {
                 url = "https://example.com"
             )
         )
-    }
+    )
 
-    private val _stories = MutableStateFlow(getDummyStories())
-    override val stories: StateFlow<List<Story>> = _stories
+    // Simulate the ViewModel's StateFlow for the preview
+    val stories: StateFlow<List<Story>> = _stories
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyHackerNewsApp() {
+    // Use PreviewNewsViewModel with dummy data
     val previewViewModel = PreviewNewsViewModel()
     MyHackerNewsAndroidTheme {
-        MyHackerNewsApp(viewModel = previewViewModel)
+        MyHackerNewsApp(viewModel = object : NewsViewModel() {
+            override val stories: StateFlow<List<Story>> =
+                previewViewModel.stories
+            override val isLoading: StateFlow<Boolean> = MutableStateFlow(false)
+        })
     }
 }
