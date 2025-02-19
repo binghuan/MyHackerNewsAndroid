@@ -16,11 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bh.myhackernews_android.data.api.HackerNewsService
 import com.bh.myhackernews_android.data.model.Story
+import com.bh.myhackernews_android.data.repository.StoryRepository
 import com.bh.myhackernews_android.presentation.theme.MyHackerNewsAndroidTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +30,7 @@ fun MyHackerNewsApp(viewModel: NewsViewModel) {
     val stories by viewModel.stories.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    rememberCoroutineScope()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
@@ -130,8 +131,9 @@ class PreviewNewsViewModel {
 fun PreviewMyHackerNewsApp() {
     // Use PreviewNewsViewModel with dummy data
     val previewViewModel = PreviewNewsViewModel()
+    val mockRepository = StoryRepository(MockHackerNewsService())
     MyHackerNewsAndroidTheme {
-        MyHackerNewsApp(viewModel = object : NewsViewModel() {
+        MyHackerNewsApp(viewModel = object : NewsViewModel(mockRepository) {
             override val stories: StateFlow<List<Story>> =
                 previewViewModel.stories
             override val isLoading: StateFlow<Boolean> = MutableStateFlow(false)
@@ -143,5 +145,25 @@ fun PreviewMyHackerNewsApp() {
                 previewViewModel.loadMoreStories()
             }
         })
+    }
+}
+
+// Mock HackerNewsService for testing
+class MockHackerNewsService : HackerNewsService {
+    override suspend fun getNewStories(): List<Long> {
+        return listOf(1L, 2L)
+    }
+
+    override suspend fun getStoryById(id: Long): Story {
+        return Story(
+            id = id,
+            by = "User$id",
+            descendants = 10,
+            score = 100,
+            time = 1638501294,
+            title = "Sample Story $id",
+            type = "story",
+            url = "https://example.com"
+        )
     }
 }

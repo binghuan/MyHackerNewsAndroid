@@ -17,6 +17,7 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
   - [API to Fetch Item](#api-to-fetch-item)
   - [Illustration](#illustration)
   - [How to Build the App](#how-to-build-the-app)
+  - [How to Run Tests](#how-to-run-tests)
   - [Related Projects](#related-projects)
   - [Comparison Between iOS SwiftUI and Android Compose](#comparison-between-ios-swiftui-and-android-compose)
     - [iOS SwiftUI](#ios-swiftui)
@@ -41,6 +42,23 @@ Data source for the project is from [Hacker News API](https://github.com/HackerN
 - Open `MyHackerNewsAndroid` project in Android Studio.
 - Connect an Android device or start an emulator.
 - Click the **Run** button to build and launch the app.
+
+## How to Run Tests
+
+You can run the tests for this project using the command line. Follow the steps below:
+
+1. Open a terminal and navigate to the project directory.
+
+2. To run unit tests, use the following command:
+    ```sh
+    ./gradlew test
+    ```
+
+3. To run Android instrumented tests, use the following command:
+    ```sh
+    ./gradlew connectedAndroidTest
+    ```
+
 
 ## Related Projects
 - MyHackerNews for iOS - https://github.com/binghuan/MyHackerNews

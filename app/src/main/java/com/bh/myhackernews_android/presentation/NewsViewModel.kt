@@ -2,15 +2,13 @@ package com.bh.myhackernews_android.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bh.myhackernews_android.data.api.HackerNewsApiClient
 import com.bh.myhackernews_android.data.model.Story
 import com.bh.myhackernews_android.data.repository.StoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-open class NewsViewModel : ViewModel() {
-    private val repository = StoryRepository(HackerNewsApiClient.hackerNewsService)
+open class NewsViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _stories = MutableStateFlow<List<Story>>(emptyList())
     open val stories: StateFlow<List<Story>> = _stories
 
@@ -43,9 +41,11 @@ open class NewsViewModel : ViewModel() {
     }
 
     open fun refreshStories() {
-        currentPage = 0
-        _stories.value = emptyList()
-        loadStories()
+        viewModelScope.launch {
+            currentPage = 0
+            _stories.value = emptyList()
+            loadStories()
+        }
     }
 
     open fun loadMoreStories() {
