@@ -2,23 +2,25 @@ package com.bh.myhackernews_android.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.bh.myhackernews_android.data.model.Story
 import com.bh.myhackernews_android.presentation.theme.MyHackerNewsAndroidTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,28 +28,62 @@ fun MyHackerNewsApp(viewModel: NewsViewModel) {
     // Observe the list of stories and loading state from the ViewModel
     val stories by viewModel.stories.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text("MyHackerNews") })
-    }) { padding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (isLoading) {
-                // Show loading indicator in the center of the screen
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { index ->
+                if (index == stories.size - 1 && !isLoading) {
+                    viewModel.loadMoreStories()
+                }
+            }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("MyHackerNews") },
+                actions = {
+                    IconButton(onClick = { viewModel.refreshStories() }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = Color.White // Change the icon color here
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF6200EE), // Use a more prominent color
+                    titleContentColor = Color.White // Ensure the title color is readable
                 )
-            } else {
-                // Show the list of stories
-                LazyColumn(contentPadding = padding) {
-                    items(stories) { story ->
-                        StoryItem(story)
+            )
+        }
+    ) { padding ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                state = listState,
+                contentPadding = padding
+            ) {
+                items(stories) { story ->
+                    StoryItemView(story)
+                }
+                item {
+                    if (isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
         }
     }
 }
-
 
 // Mock ViewModel for Preview (No inheritance from NewsViewModel)
 class PreviewNewsViewModel {
@@ -79,8 +115,15 @@ class PreviewNewsViewModel {
 
     // Simulate the ViewModel's StateFlow for the preview
     val stories: StateFlow<List<Story>> = _stories
-}
 
+    fun refreshStories() {
+        // No-op for preview
+    }
+
+    fun loadMoreStories() {
+        // No-op for preview
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -92,6 +135,13 @@ fun PreviewMyHackerNewsApp() {
             override val stories: StateFlow<List<Story>> =
                 previewViewModel.stories
             override val isLoading: StateFlow<Boolean> = MutableStateFlow(false)
+            override fun refreshStories() {
+                previewViewModel.refreshStories()
+            }
+
+            override fun loadMoreStories() {
+                previewViewModel.loadMoreStories()
+            }
         })
     }
 }
