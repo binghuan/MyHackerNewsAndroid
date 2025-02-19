@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.bh.myhackernews_android"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.bh.myhackernews_android"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -41,6 +41,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"  // Ensure compatibility with Compose
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
