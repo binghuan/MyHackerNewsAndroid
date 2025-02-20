@@ -30,7 +30,6 @@ fun MyHackerNewsApp(viewModel: NewsViewModel) {
     val stories by viewModel.stories.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyListState()
-    rememberCoroutineScope()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
